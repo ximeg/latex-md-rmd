@@ -2,16 +2,6 @@
 title: "Just a test"
 author: "RK"
 date: "August 27, 2017"
-output:
-  html_document:
-    fig_caption: yes
-    fig_height: 4
-    fig_width: 6
-    highlight: tango
-    theme: flatly
-  md_document:
-    dev: pdf
-bibliography: refs.bib
 ---
 
 ```{r setup, echo=F, output="hide", message=F, warning=F}

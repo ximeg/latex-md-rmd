@@ -18,7 +18,6 @@ BIB=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_BIB))
 
 # Rmd converted to md
 RMD_MD=$(patsubst %.Rmd, %.md, $(RMD))
-RMD_FIGS=$(patsubst %.Rmd, %_files, $(RMD))
 RMD2MD=Rscript -e \
 	'library(rmarkdown); \
 	 fn <- commandArgs(trailingOnly=T)[1]; \
@@ -37,7 +36,7 @@ $(TARGET).tex: $(BUILD)/template.tex $(ALL_MD_FILES) $(BIB)
 	 --natbib --listings \
 	 -o $@
 
-$(TARGET).pdf: $(TARGET).tex $(RMD_FIGS)
+$(TARGET).pdf: $(TARGET).tex
 	cd $(BUILD) ; pwd; latexmk -bibtex -pdf $(NAME).tex ; latexmk -c $(NAME).tex
 
 # Copy original source files to build dir
@@ -51,13 +50,15 @@ $(BIB): $(SRC_BIB)
 	cp -f $^ $(BUILD)
 $(BUILD)/template.tex: template.tex
 	cp -f $^ $(BUILD)
+$(BUILD)/_output.yaml: $(CONTENT)/_output.yaml
+	cp -f $^ $(BUILD)
 
 
 # Convert RMarkdown to markdown and images
-%.md : %.Rmd
-	$(RMD2MD) $^
-	rm $(patsubst %.Rmd, %.knit.md, $^)
-	mv $(patsubst %.Rmd, %.utf8.md, $^) $@
+%.md : %.Rmd $(BUILD)/_output.yaml
+	$(RMD2MD) $<
+	rm $(patsubst %.Rmd, %.knit.md, $<)
+	mv $(patsubst %.Rmd, %.utf8.md, $<) $@
 
 
 clean:

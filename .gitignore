@@ -25,3 +25,4 @@ content/*.html
 # BibTeX
 *.bbl
 *.blg
+*cache*

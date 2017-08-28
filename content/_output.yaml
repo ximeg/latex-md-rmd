@@ -1,0 +1,11 @@
+html_document:
+  fig_caption: yes
+  fig_width: 3
+  fig_height: 5
+  highlight: tango
+  theme: flatly
+  bibliography: refs.bib
+md_document:
+  fig_width: 5
+  fig_height: 3
+  dev: pdf
