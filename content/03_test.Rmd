@@ -46,15 +46,20 @@ iris %>% head(4) %>% kable(format="latex", digits=2, row.names=T,
 
 ### Python?!
 
+\begin{wrapfigure}[6]{r}{40mm}
+  \hfill\includegraphics[width=35mm]
+    {imgs/scatterplot.pdf}
+\end{wrapfigure}
+
 Since `knitr` and `RStudio` support `Python` as well, we can insert `Python`
 chunks into the document! However, we have to care about image saving ourselves.
 Another problem is about environments: `R` uses one environment for all chunks
 in the document, but each `Python` chunk do not know anything about other
 `Python` chunks in the same document.
 
-```{python include=F, eval=T, dev="png"}
+```{python include=T, eval=F}
 import numpy as np
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
 N = 50
 x, y, colors = (np.random.rand(n) for n in [N, N, N])
@@ -63,11 +68,8 @@ area = np.pi * (15 * np.random.rand(N))**2  # 0 to 15 point radii
 f = plt.figure(figsize=(3,2))
 plt.scatter(x, y, s=area, c=colors, alpha=0.5)
 plt.title("Matplotlib scatterplot")
-plt.savefig("scatterplot.pdf")
+plt.savefig("imgs/scatterplot.pdf")
 ```
-
-![This figure was dynamically generated in Python](scatterplot.pdf){ width=30% }
-
 
 ## Tricks with images
 
@@ -77,11 +79,11 @@ If image is saved into PDF format, then it will have exactly the same size on
 paper as specified in `knitr` (either in the `YAML` header or in the chunk
 options). However, often PNG works fine as well.
 
-```{r tiny_ggplot_png, echo=FALSE, fig.width=3, fig.height=2, fig.cap="Tiny `ggplot2` plot, $3\\times2$ inches, PNG\\label{fig:tiny_ggplot_png}", dev="png", dpi=300}
-ggplot(diamonds, aes(x=price, fill=cut)) +
-    geom_density(alpha=0.25) +
-    theme(text=element_text(size=7)) +
-    facet_wrap("clarity")
+```{r tiny_ggplot_png, echo=FALSE, fig.width=1, fig.height=0.8, fig.cap="Tiny `ggplot2` figure, $1\\times0.8$ inches, PNG\\label{fig:tiny_ggplot_png}", dev="png", dpi=300}
+ggplot(mtcars, aes(wt, mpg, col=factor(cyl))) +
+    geom_point(alpha=0.75) +
+    scale_colour_discrete(guide=F) +
+    theme(text=element_text(size=7))
 ```
 
 ### Pack several images together
