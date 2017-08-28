@@ -1,0 +1,74 @@
+\documentclass[a4paper]{scrartcl}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[english]{babel}
+\usepackage{booktabs}
+\usepackage{eurosym}
+\usepackage{fancyvrb}
+\usepackage{geometry}
+\usepackage{grffile}
+\usepackage{hyperref}
+\usepackage{ifluatex}
+\usepackage{ifxetex}
+\usepackage{longtable}
+\usepackage{siunitx}
+\usepackage{ulem}
+\usepackage{verbatim}
+\usepackage{wrapfig}
+\usepackage{xcolor}
+
+\usepackage[numbers]{natbib}
+% To change the title from References to Bibliography:
+\renewcommand\refname{Bibliography}
+
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily,
+    numbers=left,
+    keywordstyle=\color[rgb]{0.13,0.29,0.53}\bfseries,
+    stringstyle=\color[rgb]{0.31,0.60,0.02},
+    commentstyle=\color[rgb]{0.56,0.35,0.01}\itshape,
+    numberstyle=\footnotesize,
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color[RGB]{248,248,248},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=true,
+    breakautoindent=true,
+    escapeinside={\%*}{*)},
+    linewidth=\linewidth,
+    basewidth=0.5em,
+}
+
+\title{Document title}
+\author{Author name}
+
+\begin{document}
+    \maketitle
+
+    $body$
+
+    \tableofcontents
+    \bibliography{refs}
+    \bibliographystyle{unsrtnat}
+\end{document}
+

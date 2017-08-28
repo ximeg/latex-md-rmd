@@ -1,0 +1,110 @@
+---
+title: "Just a test"
+author: "RK"
+date: "August 27, 2017"
+output:
+  html_document:
+    fig_caption: yes
+    fig_height: 4
+    fig_width: 6
+    highlight: tango
+    theme: flatly
+  md_document:
+    dev: pdf
+bibliography: refs.bib
+---
+
+```{r setup, echo=F, output="hide", message=F, warning=F}
+library(dplyr)
+library(magrittr)
+library(knitr)
+library(ggplot2)
+library(ggthemes)
+```
+
+## R Markdown
+
+This part comes from an `R Markdown` document. This means, that now I can
+include arbitrary chunks with `R` code here. For example, there are
+`r nrow(mtcars)` rows in the `mtcars` dataset.
+
+This code uses `kable` function to create a nicely-rendered table, like
+Table \ref{tbl:cars}.
+
+```{r cars}
+kable(mtcars[1:3, ], caption="\\label{tbl:cars}First three rows
+      from the `mtcars` dataset.")
+```
+
+We can ask `kable` to make fancy floating tables using \LaTeX{}, like Table
+\ref{tbl:float_tbl}. They are quite customizable.
+
+```{r latex_table}
+iris %>% head(4) %>% kable(format="latex", digits=2, row.names=T,
+  caption="\\label{tbl:float_tbl}Floating table")
+```
+
+### Python?!
+
+Since `knitr` and `RStudio` support `Python` as well, we can insert `Python`
+chunks into the document! However, we have to care about image saving ourselves.
+Another problem is about environments: `R` uses one environment for all chunks
+in the document, but each `Python` chunk do not know anything about other
+`Python` chunks in the same document.
+
+```{python include=F}
+import numpy as np
+import matplotlib.pyplot as plt
+
+N = 50
+x, y, colors = (np.random.rand(n) for n in [N, N, N])
+area = np.pi * (15 * np.random.rand(N))**2  # 0 to 15 point radii
+
+f = plt.figure(figsize=(3,2))
+plt.scatter(x, y, s=area, c=colors, alpha=0.5)
+plt.title("Matplotlib scatterplot")
+plt.savefig("imgs/scatterplot.pdf")
+```
+
+![This figure was dynamically generated in Python](imgs/scatterplot.pdf){ width=30% }
+
+
+## Tricks with images
+
+### Size specification
+
+If image is saved into PDF format, then it will have exactly the same size on
+paper as specified in `knitr` (either in the `YAML` header or in the chunk
+options). However, often PNG works fine as well.
+
+```{r tiny_ggplot_png, echo=FALSE, fig.width=3, fig.height=2, fig.cap="Tiny `ggplot2` plot, $3\\times2$ inches, PNG\\label{fig:tiny_ggplot_png}", dev="png", dpi=300}
+ggplot(diamonds, aes(x=price, fill=cut)) +
+    geom_density(alpha=0.25) +
+    theme(text=element_text(size=7)) +
+    facet_wrap("clarity")
+```
+
+### Pack several images together
+
+For `ggplot2`, use function `ggplotGrob()` from `gridExtra`. If you need to combine `ggplot2` with `lattice`, use other funcs from `gridExtra`.
+
+```{r ggplot_many_plots, fig.cap="Alignment of plots using `ggplot2`, `rbind`/`cbind` and `ggplotGrob`."}
+suppressMessages(library(gridExtra, warn.conflicts = F))
+p <- ggplot(mtcars, aes(x=mpg, col=factor(cyl))) +
+    scale_color_brewer("Set1", guide=F)
+a <- p + geom_point(aes(y=hp))
+b <- p + geom_point(aes(y=qsec))
+t1 <- theme_classic()
+t2 <- theme_wsj()
+t3 <- theme_igray()
+
+f <- ggplotGrob
+
+rbind(cbind( f(a+t1), f(a+t2), f(a+t3) ),
+      cbind( f(b+t1), f(b+t2), f(b+t3) )) %>% plot
+```
+
+
+
+\input{content/04_pure_latex}
+

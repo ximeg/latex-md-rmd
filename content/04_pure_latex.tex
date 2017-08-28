@@ -1,0 +1,80 @@
+
+% Included in 03_test.Rmd using \input{content/04_pure_latex}
+
+\section{Use of pure \LaTeX}
+
+It is possible to integrate a file contaning pure \LaTeX code into this report.
+To do this, create a \TeX file and use command \texttt{\textbackslash{}input\{content/filename.tex\}} in one of your (R)md-documents.
+
+\begin{quote}
+   \textbf{Note,} however, that these \TeX documents are not tracked for changes
+   from your \texttt{Makefile}.
+\end{quote}
+
+Footnotes\footnote{This is an example of a footnote.} pose no problem.
+Likewise, bibliographic references \cite{paper1} are handled with ease.
+!`\TeX\ can g\`{e}n\'{e}rate alm\"{o}st all the accents and
+spe\c{c}ial symbols used in Western \cite{paper2} l\aa nguages! Likewise,
+its arsenal of mathematical sym$\beta$ols, introduced below, is formidable.
+
+\subsubsection{Mathematical Formulae}
+\TeX\ is good at typesetting mathematical formulas like
+       $ x-3y = 7 $
+or
+       $ y_{i+1} = x_{i}^{2n} - \sqrt{5}x_{i}^{n} + 1$.
+Remember that a letter like
+       \( x \)        % $ ... $  and  \( ... \)  are equivalent
+is a formula when it denotes a mathematical symbol, and should
+be treated as one.
+
+Mathematical formulas may also be       %  use \[ \]
+{\em displayed}.  A displayed formula       %  or  $$  $$
+is one-line long; multiline formulas        %  or \begin{equation}
+require special formatting instructions.    %  \begin{eqnarray}
+The following formulae demonstrate
+many constructions you might find useful.
+Refer to equation (\ref{eq:fermat}), which is probably true,
+while equations (\ref{eq:dumb}-\ref{eq:realdumb}) are silly.
+Note that the \verb9equation9 and \verb9eqnarray9 environments
+number the equations, but \verb9eqnarray*9 doesn't.
+\[  x_{i+1} ~=~ N^{i+1}(x_{0}) ~=~ N(x_{i}) ~=~
+    x_{i} - \frac{f(x_{i})}{f'(x_{i})}  \]
+
+$$ \frac{\partial u}{\partial t} + \nabla^{4}u + \nabla^{2}u +
+    \frac12    |\nabla u|^{2}~ =~ c^2   $$
+
+\begin{equation}  a^{p} + b^p   \neq c^{p} ~~~\mbox{for } p>2
+    ~~ \mbox{(see proof in margin)}  \label{eq:fermat}
+\end{equation}
+$$ \lim_{n \rightarrow \infty}x_{n} \geq \pi $$
+$$ \forall x \in {\cal O} ~~\exists \delta ~~~\mbox{such that}~~~
+    |y-x|<\delta ~\Rightarrow ~y \in {\cal O} $$
+\vspace{2mm}
+$$
+\Psi' = \frac{d}{d \phi} \left( \begin{array}{c}
+  \phi_{2}  \\  \phi_{3}  \\  1 - \phi_{2} - \phi_{1}^{2}/2
+ \end{array} \right)
+ ~~~~~~~~~~~~~
+ \Theta =  \left(   \begin{array}{ccc}
+    0           &   1   &   0   \\
+- \theta_{1} \psi_{1} - \psi_{2} &  0   &   \psi_3  \\
+    -\phi_{1}           &   -1  &   0
+            \end{array}  \right)
+$$
+\vspace{2mm}
+\begin{eqnarray}
+    \int_0^{\infty} e^{-x^2}\,dx
+    & = &   e^{-\left(\int_0^{\infty}x\,dx\right)^2} \label{eq:dumb}  \\
+    & = &   e^{-\infty} ~~~~~\mbox{(bogus)} \\
+    & = &   0.38-1.7i ~~~~~\mbox{(not!)} \label{eq:realdumb}
+\end{eqnarray}
+\vspace{2mm}
+\begin{eqnarray*}           %  "*" = no line numbering
+  \sum_{n=1}^k \frac1n
+    & \approx & \ln k + \gamma  \\
+    & = &       (\ln 10)(\log_{10}k) + \gamma \\
+    & \approx & 2.3026\log_{10}k + 0.57772
+\end{eqnarray*}
+
+Unary operators ``plus'' and ``minus'' -- just use exponentiation:
+$$  {}^{+}0.168  \mbox{ or } {}^{-}1.168    $$
