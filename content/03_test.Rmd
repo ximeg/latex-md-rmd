@@ -66,9 +66,9 @@ plt.savefig("imgs/scatterplot.pdf")
 
 ### Size specification
 
-If image is saved into PDF format, then it will have exactly the same size on
+If image is saved into PDF, it will have exactly the same size on
 paper as specified in `knitr` (either in the `YAML` header or in the chunk
-options). However, often PNG works fine as well.
+options). PNG seems to also work fine.
 
 ```{r tiny_ggplot_png, echo=FALSE, fig.width=1, fig.height=0.8, fig.cap="Tiny `ggplot2` figure, $1\\times0.8$ inches, PNG\\label{fig:tiny_ggplot_png}", dev="png", dpi=300}
 ggplot(mtcars, aes(wt, mpg, col=factor(cyl))) +

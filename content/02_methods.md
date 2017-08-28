@@ -32,8 +32,10 @@ example how to do this:
 
 
 \begin{wrapfigure}[4]{r}{25mm}
-  \hfill\includegraphics[width=17mm]
+  \hfil \begin{overpic}[grid,width=17mm]
     {imgs/Hoeilaart_station_Nero_beeld.JPG}
+    \put (2,84) {\huge \bfseries a}
+  \end{overpic}
 \end{wrapfigure}
 
 For even more control, you can always embed \LaTeX{} code directly into your
@@ -42,8 +44,10 @@ figures like this:
 
 ```
 \begin{wrapfigure}[4]{r}{25mm}
-  \hfill\includegraphics[width=17mm]
+  \hfil \begin{overpic}[grid,width=17mm]
     {imgs/Hoeilaart_station_Nero_beeld.JPG}
+    \put (2,84) {\huge \bfseries a}
+  \end{overpic}
 \end{wrapfigure}
 ```
 
