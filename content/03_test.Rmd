@@ -52,7 +52,7 @@ Another problem is about environments: `R` uses one environment for all chunks
 in the document, but each `Python` chunk do not know anything about other
 `Python` chunks in the same document.
 
-```{python include=F}
+```{python include=F, eval=T, dev="png"}
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -63,10 +63,10 @@ area = np.pi * (15 * np.random.rand(N))**2  # 0 to 15 point radii
 f = plt.figure(figsize=(3,2))
 plt.scatter(x, y, s=area, c=colors, alpha=0.5)
 plt.title("Matplotlib scatterplot")
-plt.savefig("imgs/scatterplot.pdf")
+plt.savefig("scatterplot.pdf")
 ```
 
-![This figure was dynamically generated in Python](imgs/scatterplot.pdf){ width=30% }
+![This figure was dynamically generated in Python](scatterplot.pdf){ width=30% }
 
 
 ## Tricks with images
@@ -106,5 +106,5 @@ rbind(cbind( f(a+t1), f(a+t2), f(a+t3) ),
 
 
 
-\input{content/04_pure_latex}
+\input{../content/04_pure_latex}
 

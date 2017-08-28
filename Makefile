@@ -1,5 +1,8 @@
-TARGET=report
+NAME=report
 CONTENT=content
+BUILD=build
+
+TARGET=$(BUILD)/$(NAME)
 
 # User-created content in the $(CONTENT) folder
 SRC_RMD=$(wildcard $(CONTENT)/*.Rmd)
@@ -8,10 +11,10 @@ SRC_MD=$(wildcard $(CONTENT)/*.md)
 SRC_BIB=$(CONTENT)/refs.bib
 
 # User-created content copied to the build foder
-RMD=$(patsubst $(CONTENT)/%, %, $(SRC_RMD))
-MD=$(patsubst $(CONTENT)/%, %, $(SRC_MD))
-#TEX=$(patsubst $(CONTENT)/%, %, $(SRC_TEX))
-BIB=$(patsubst $(CONTENT)/%, %, $(SRC_BIB))
+RMD=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_RMD))
+MD=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_MD))
+#TEX=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_TEX))
+BIB=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_BIB))
 
 # Rmd converted to md
 RMD_MD=$(patsubst %.Rmd, %.md, $(RMD))
@@ -28,29 +31,30 @@ RMD_TEX=$(patsubst %.Rmd, %.tex, $(RMD))
 
 ALL_MD_FILES=$(MD) $(RMD_MD)
 
-.PHONY:
+.PHONY: build_dir
 
-all: $(TARGET).pdf
+all: build_dir $(TARGET).pdf
 
-$(TARGET).tex: template.tex $(ALL_MD_FILES) $(BIB)
+$(TARGET).tex: $(BUILD)/template.tex $(ALL_MD_FILES) $(BIB)
 	pandoc $(sort $(ALL_MD_FILES)) --template $< --to latex \
 	 --from markdown+tex_math_dollars \
 	 --natbib --listings \
 	 -o $@
 
 $(TARGET).pdf: $(TARGET).tex $(RMD_FIGS)
-	latexmk -bibtex -pdf $(TARGET).tex
-	latexmk -c $(TARGET).tex
+	cd $(BUILD) ; pwd; latexmk -bibtex -pdf $(NAME).tex ; latexmk -c $(NAME).tex
 
 # Copy original source files to build dir
-$(RMD): $(SRC_RMD)
-	cp -f $^ .
-$(MD): $(SRC_MD) # this rule makes some problems
-	cp -f $^ .
-$(TEX): $(SRC_TEX)
-	cp -f $^ .
-$(BIB): $(SRC_BIB)
-	cp -f $^ .
+#$(RMD): $(SRC_RMD)
+#	cp -f $^ $(BUILD)
+#$(MD): $(SRC_MD) # this rule makes some problems
+#	cp -f $^ $(BUILD)
+#$(TEX): $(SRC_TEX)
+#	cp -f $^ $(BUILD)
+#$(BIB): $(SRC_BIB)
+#	cp -f $^ $(BUILD)
+$(BUILD)/template.tex: template.tex
+	cp -f $^ $(BUILD)
 
 
 # Convert RMarkdown to markdown and images
@@ -72,5 +76,7 @@ clean:
 	rm -f $(TARGET).bbl $(TARGET).tex
 
 
-#build_dir:
-#	mkdir -p build
+build_dir:
+	mkdir -p $(BUILD)
+	cp -d content/* $(BUILD)/
+	#cd $(BUILD) && ln -sf ../imgs imgs
