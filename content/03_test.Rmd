@@ -20,11 +20,12 @@ library(magrittr)
 library(knitr)
 library(ggplot2)
 library(ggthemes)
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE)
 ```
 
 ## R Markdown
 
-This part comes from an `R Markdown` document. This means, that now I can
+This part comes from an `R Markdown` file. This means, that now I can
 include arbitrary chunks with `R` code here. For example, there are
 `r nrow(mtcars)` rows in the `mtcars` dataset.
 
