@@ -1,6 +1,7 @@
 # Knitr output
 content/*.html
 *_files/
+build/*
 
 # LaTeX temporary files
 *.aux
