@@ -77,11 +77,11 @@ ggplot(mtcars, aes(wt, mpg, col=factor(cyl))) +
     theme(text=element_text(size=7))
 ```
 
-### Pack several images together
+### Pack several `ggplot2` or `lattice` images together
 
-For `ggplot2`, use function `ggplotGrob()` from `gridExtra`. If you need to combine `ggplot2` with `lattice`, use other funcs from `gridExtra`.
+For `ggplot2`, use function `ggplotGrob()` from `gridExtra`, then pack images as you need using `cbind()` and `rbind()` – see example in Fig \ref{fig:six_plots}. If you need to combine `ggplot2` with `lattice`, use other funcs from `gridExtra`.
 
-```{r ggplot_many_plots, fig.cap="Alignment of plots using `ggplot2`, `rbind`/`cbind` and `ggplotGrob`."}
+```{r ggplot_many_plots, fig.cap="\\label{fig:six_plots}Alignment of plots using `ggplot2`, `rbind`/`cbind` and `ggplotGrob`."}
 suppressMessages(library(gridExtra, warn.conflicts = F))
 p <- ggplot(mtcars, aes(x=mpg, col=factor(cyl))) +
     scale_color_brewer("Set1", guide=F)
@@ -97,7 +97,13 @@ rbind(cbind( f(a+t1), f(a+t2), f(a+t3) ),
       cbind( f(b+t1), f(b+t2), f(b+t3) )) %>% plot
 ```
 
+### Mathematical formulae in (`r`)`markdown`
 
+You can insert formulas into a `markdown` files using dollar signs like this
+`$E=mc^2$` which gives $E=mc^2$. But make sure that you have *no* whitespaces
+between the formula and the surrounding `$`, and no digits follow
+immediately after the closing `$`. More details can be found in the
+pandoc manual, section *tex_math_dollars*.
 
 \input{../content/04_pure_latex}
 

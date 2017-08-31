@@ -11,7 +11,10 @@ fit your needs.
 To get started, place your content into the (`r`)`markdown` files in the
 `content` folder. You can conveniently edit `rmarkdown` files using `RStudio`.
 When done, call `make`. This will run all `R` code chunks and convert
-`rmarkdown`→`markdown`, then all markdown files are fed to `pandoc` that generates a single \LaTeX{} file from them using the template file. Finally, the generated \LaTeX{} report file is translated to PDF, calling `bibtex` if necessary. The order of the included files is determined by their names.
+`rmarkdown`→`markdown`, then all markdown files are fed to `pandoc` that generates
+a single \LaTeX{} file from them using the template file. Finally, the
+generated \LaTeX{} report file is translated to PDF, calling `bibtex` if
+necessary. _The order of the included files is determined by their names_.
 
 `GNU Make` automatically determines which files have been update since last run
 and processes only what has to be processed.
