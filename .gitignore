@@ -10,6 +10,7 @@ build/*
 
 # PDF output - usually a bad idea to keep this in Git
 build/*.pdf
+*.pdf
 
 # Latexmk
 *.fdb_latexmk
@@ -27,3 +28,5 @@ build/*.pdf
 *.bbl
 *.blg
 *cache*
+.Rproj.user
+.Rhistory

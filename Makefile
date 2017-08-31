@@ -1,3 +1,4 @@
+#################### DEFINITIONS #######################
 NAME=report
 CONTENT=content
 BUILD=build
@@ -5,66 +6,68 @@ BUILD=build
 TARGET=$(BUILD)/$(NAME)
 
 # User-created content in the $(CONTENT) folder
-SRC_RMD=$(wildcard $(CONTENT)/*.Rmd)
-SRC_MD=$(wildcard $(CONTENT)/*.md)
-SRC_TEX=$(wildcard $(CONTENT)/*.tex)
-SRC_BIB=$(CONTENT)/refs.bib
+SRC=$(filter %.Rmd %.md %.tex %.yaml %.bib, $(wildcard $(CONTENT)/*))
+BLD_SRC=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC))
 
 # User-created content copied to the build foder
-RMD=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_RMD))
-MD=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_MD))
-TEX=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_TEX))
-BIB=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC_BIB))
+RMD=$(filter %.Rmd, $(BLD_SRC))
+MD=$(filter  %.md, $(BLD_SRC))
+TEX=$(filter %.tex, $(BLD_SRC))
+BIB=$(filter %.bib, $(BLD_SRC))
 
 # Rmd converted to md
-RMD_MD=$(patsubst %.Rmd, %.md, $(RMD))
+RMD_MD=$(RMD:.Rmd=.md)
 RMD2MD=Rscript -e \
 	'library(rmarkdown); \
 	 fn <- commandArgs(trailingOnly=T)[1]; \
 	 render(fn, run_pandoc=F, clean=F, output_format="md_document")'
+ALL_MD_FILES=$(sort $(MD) $(RMD_MD))
 
+#################### RULES #######################
+all: $(NAME).pdf
 
-ALL_MD_FILES=$(MD) $(RMD_MD)
+$(NAME).pdf : $(TARGET).pdf
+	cp -fl $< $@
 
-.PHONY:
+# prep build directory
+$(BUILD)/imgs : $(BUILD) imgs
+	cd $(BUILD) && ln -sfv ../imgs imgs -T
 
-all: $(BUILD) $(TARGET).pdf
+$(BUILD):
+	mkdir -p $(BUILD)
 
-$(TARGET).tex: $(BUILD)/template.tex $(ALL_MD_FILES) $(BIB)
-	pandoc $(sort $(ALL_MD_FILES)) --template $< --to latex \
+# final goal - compile pdf with LaTeX
+$(TARGET).pdf: $(BUILD) $(BUILD)/imgs $(TARGET).tex $(BIB)
+	cd $(BUILD) ; latexmk -silent -bibtex -pdf $(NAME).tex
+
+# create the main tex file
+$(TARGET).tex: $(BUILD)/template.tex $(ALL_MD_FILES) $(TEX)
+	pandoc $(ALL_MD_FILES) --template $< --to latex \
 	 --from markdown+tex_math_dollars \
 	 --natbib --listings \
 	 -o $@
 
-$(TARGET).pdf: $(TARGET).tex
-	cd $(BUILD) ; pwd; latexmk -bibtex -pdf $(NAME).tex ; latexmk -c $(NAME).tex
+# Copy original source files to build dir (makes HARDLINKS)
+$(BLD_SRC): $(BUILD) $(SRC) copy2build
+copy2build:
+	cp -lf $(SRC) $(BUILD)/
 
-# Copy original source files to build dir
-$(RMD): $(SRC_RMD)
-	cp -f $^ $(BUILD)
-$(MD): $(SRC_MD)
-	cp -f $^ $(BUILD)
-$(TEX): $(SRC_TEX)
-	cp -f $^ $(BUILD)
-$(BIB): $(SRC_BIB)
-	cp -f $^ $(BUILD)
-$(BUILD)/template.tex: template.tex
-	cp -f $^ $(BUILD)
-$(BUILD)/_output.yaml: $(CONTENT)/_output.yaml
-	cp -f $^ $(BUILD)
+# copy latex template to the build dir
+$(BUILD)/template.tex : $(BUILD) template.tex
+	cp -lf template.tex $(BUILD)/
 
-
-# Convert RMarkdown to markdown and images
-%.md : %.Rmd $(BUILD)/_output.yaml
+# Process Rmd: knit them and convert them to md
+%.md: %.Rmd $(BUILD)/_output.yaml
 	$(RMD2MD) $<
 	rm $(patsubst %.Rmd, %.knit.md, $<)
 	mv $(patsubst %.Rmd, %.utf8.md, $<) $@
 
 
+# Remove LaTeX output, except for PDF
 clean:
+	cd $(BUILD) ; latexmk -verbose -c $(NAME).tex
+	rm -f $(filter %.bbl %.log %.aux, $(wildcard $(BUILD)/$(NAME).*))
+
+# Remove the whole build directory
+distclean:
 	rm -rf $(BUILD)
-
-
-$(BUILD):
-	mkdir -p $(BUILD)
-	cd $(BUILD) && ln -sf ../imgs imgs
