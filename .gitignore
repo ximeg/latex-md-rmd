@@ -30,3 +30,4 @@ build/*.pdf
 *cache*
 .Rproj.user
 .Rhistory
+exclude

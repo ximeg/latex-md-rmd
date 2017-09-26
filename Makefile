@@ -1,28 +1,36 @@
 #################### DEFINITIONS #######################
-NAME=report
-LATEX_ENGINE=xelatex  # Options are  pdflatex | lualatex | xelatex
-CONTENT=content
-BUILD=build
+NAME := report
+LATEX_ENGINE := xelatex  # Options are  pdflatex | lualatex | xelatex
+CONTENT := content
+BUILD := build
 
-TARGET=$(BUILD)/$(NAME)
+TARGET := $(BUILD)/$(NAME)
+
+all: exclude $(NAME).pdf
+
+exclude:
+		echo "# Remove preceding '+' to exclude particular file from the build process" > exclude
+		find $(CONTENT) -iname "*.Rmd" -or -iname "*.md" | sed s/^/+/g >> exclude
 
 # User-created content in the $(CONTENT) folder
-SRC=$(filter %.Rmd %.md %.tex %.yaml %.bib, $(wildcard $(CONTENT)/*))
-BLD_SRC=$(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC))
+EXCLUDE := $(shell cat exclude)
+SRC := $(filter %.Rmd %.md %.tex %.yaml %.bib, $(wildcard $(CONTENT)/*))
+SRC := $(filter-out $(EXCLUDE), $(SRC))
+BLD_SRC := $(patsubst $(CONTENT)/%, $(BUILD)/%, $(SRC))
 
 # User-created content copied to the build foder
-RMD=$(filter %.Rmd, $(BLD_SRC))
-MD=$(filter  %.md, $(BLD_SRC))
-TEX=$(filter %.tex, $(BLD_SRC))
-BIB=$(filter %.bib, $(BLD_SRC))
+RMD := $(filter %.Rmd, $(BLD_SRC))
+MD := $(filter  %.md, $(BLD_SRC))
+TEX := $(filter %.tex, $(BLD_SRC))
+BIB := $(filter %.bib, $(BLD_SRC))
 
 # Rmd converted to md
-RMD_MD=$(RMD:.Rmd=.md)
-RMD2MD=Rscript -e \
+RMD_MD := $(RMD:.Rmd=.md)
+RMD2MD := Rscript -e \
 	'library(rmarkdown); \
 	 fn <- commandArgs(trailingOnly=T)[1]; \
 	 render(fn, run_pandoc=F, clean=F, output_format="md_document")'
-ALL_MD_FILES=$(sort $(MD) $(RMD_MD))
+ALL_MD_FILES := $(sort $(MD) $(RMD_MD))
 
 #################### RULES #######################
 all: $(NAME).pdf
@@ -46,6 +54,7 @@ $(TARGET).tex: $(BUILD)/template.tex $(ALL_MD_FILES) $(TEX)
 	pandoc $(ALL_MD_FILES) --template $< --to latex \
 	 --from markdown+tex_math_dollars \
 	 --natbib --listings \
+	 --latexmathml \
 	 -o $@
 
 # Copy original source files to build dir (makes HARDLINKS)
@@ -66,7 +75,8 @@ $(BUILD)/template.tex : $(BUILD) template.tex
 
 # Remove LaTeX output, except for PDF
 clean:
-	cd $(BUILD) ; latexmk -verbose -c $(NAME).tex
+	cd $(BUILD) ; latexmk -verbose -c $(NAME).tex -f
+	rm -f $(BUILD)/$(NAME).tex
 	rm -f $(filter %.bbl %.log %.aux, $(wildcard $(BUILD)/$(NAME).*))
 
 # Remove the whole build directory
