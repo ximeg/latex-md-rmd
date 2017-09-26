@@ -93,8 +93,8 @@ t3 <- theme_igray()
 
 f <- ggplotGrob
 
-rbind(cbind( f(a+t1), f(a+t2), f(a+t3) ),
-      cbind( f(b+t1), f(b+t2), f(b+t3) )) %>% plot
+rbind(cbind( f(a+t1), f(a+t2), f(a+t3), size="last" ),
+      cbind( f(b+t1), f(b+t2), f(b+t3), size="first" ), size="first") %>% plot
 ```
 
 ### Mathematical formulae in (`r`)`markdown`
