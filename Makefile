@@ -82,3 +82,4 @@ clean:
 # Remove the whole build directory
 distclean:
 	rm -rf $(BUILD)
+	rm -f exclude
