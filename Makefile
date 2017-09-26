@@ -1,5 +1,6 @@
 #################### DEFINITIONS #######################
 NAME=report
+LATEX_ENGINE=xelatex  # Options are  pdflatex | lualatex | xelatex
 CONTENT=content
 BUILD=build
 
@@ -38,7 +39,7 @@ $(BUILD):
 
 # final goal - compile pdf with LaTeX
 $(TARGET).pdf: $(BUILD) $(BUILD)/imgs $(TARGET).tex $(BIB)
-	cd $(BUILD) ; latexmk -silent -bibtex -pdf $(NAME).tex
+	cd $(BUILD) ; latexmk -bibtex -pdf -$(LATEX_ENGINE) $(NAME).tex
 
 # create the main tex file
 $(TARGET).tex: $(BUILD)/template.tex $(ALL_MD_FILES) $(TEX)
